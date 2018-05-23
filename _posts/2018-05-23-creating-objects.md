@@ -1,11 +1,11 @@
 ---
 layout: post
-title: 자바스크립트의 객체 생성 및 상속
+title: 자바스크립트의 객체 생성
 tags: [javascript, class, inherit]
 excerpt_separator: <!--more-->
 ---
 
-자바스크립트의 객체 생성 방법과 프로토타입 체인을 활용하여 상속을 구현하는 방법에 대해 알아보자.
+자바스크립트의 객체 생성 방법에 대해 알아보자.
 <!--more-->
 ## 객체 생성
 자바스크립트에서 객체를 생성하는 방법은 여러가지가 있다.
@@ -45,18 +45,13 @@ person.greeting = function() {
 };
 ```
 
-### this는 무엇인가?
-greeting 함수에서 사용되는 this는 C나 Java를 알고 있는 분들이 항상 해깔려하는 부분이다.
+> #### this는 무엇인가?
+> greeting 함수에서 사용되는 this는 C나 Java를 알고 있는 분들이 항상 해깔려하는 부분이다.
 일단 이 시점에서는 단순하게 해당 코드(함수)를 가지고 있는 객체라고만 알아두자.
-
-## 객체지향 프로그래밍 - 기초
-우리는 위에서 person이라는 객체를 만들어 보았다. 학교를 예로 들자면, 학교 안에서 사람을 세분화 해본다면 학생과 선생님으로 나눌 수 있다.
-객체지향 프로그래밍에서는 특정 클래스를 기반으로 새로운 클래스를 만들 수 있다. --- Child 클래스는 Parent 클래스를 상속받아서 만들어진다 --- 
-우리는 Person이라는 사람 클래스를 만들고 Person 클래스를 상속받아 Student와 Teacher를 만들어보자.
 
 ### 객체와 클래스
 위에서 우리가 만든 person 객체는 우리가 알고 있는 클래스와 동일하지 않다.
-객체는 클래스의 인스턴스다. 우리가 만든 person 객체를 여러개 생성하려고 한다면 에러가 발생한다.
+우리가 만든 person 객체를 여러개 생성하려고 한다면 에러가 발생한다.
 
 ```javascript
 var person = {};
@@ -64,6 +59,7 @@ var student = new person(); //TypeError: object is not function
 ```
 
 오브젝트가 함수가 아니라서 에러가 발생한다. 즉 new 키워드는 함수만 사용할 수 있다.
+
 ### 생성자와 객체 인스턴스
 자바스크립트는 새로운 인스턴스가 필요할 때마다 객체를 재구성해야 한다.
 객체와 그 기능을 정의하기 위해 **생성자 함수**라는 특별한 함수가 필요하다.
@@ -177,6 +173,8 @@ console.log(ckgirl); // Person { name: 'ckgirl' }
 console.log(ckboy.__proto__ === ckgirl.__proto__); // true
 ```
 ckboy변수는 Object.create()를 사용하여 객체를 생성하였다.
+이는 이전 **생성자 함수를 사용하지 않고** 객체를 사용하기 때문에 명시적으로 <code>name: {value: 'ckboyjiy'}</code>와 같이 name 필드를 정의했다.
+
 특이한 점은 greeting()함수 호출에서 "Hi! I'm ckboyjiy." 문구가 정상적으로 나오는 걸 봐서는 name값이 있다는 것인데..
 console.log(ckboy)로 찍어보면 Person {} 값이 비어 있다.
 이것은 enumerable 의 기본값이 false인데 이것은 프로퍼티를 가본적으로 숨긴다는 속성이다. ckgirl 처럼 값이 표시되길 원하면 아래와 같이 true로 지정해주면 된다.
