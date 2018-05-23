@@ -11,7 +11,7 @@ excerpt_separator: <!--more-->
 자바스크립트에서 객체를 생성하는 방법은 여러가지가 있다.
 * 객체 리터럴을 선언
 * 생성자 함수를 사용
-* Object 생성자 사용
+* Object 생성자 사용 ( var instance = new Object(); // 자세한 내용은 생략한다. )
 * Object.create() 함수를 사용
 
 먼저 객체 리터럴을 이용하여 생성하는 방법을 알아보자
@@ -147,3 +147,54 @@ console.log(ckboy.__proto__ === ckgirl.__proto__); // true
 * 각 인스턴스의 __proto__에 greeting 함수가 존재하며 두 인스턴스는 동일한 __proto__객체를 참조하는 것을 확인할 수 있다.
 
 위처럼 생성자 함수와 프로토타입을 이용하면 클래스와 유사하게 자바스크립트 객체를 생성할 수 있다.
+
+new 키워드를 이용한 생성자 함수 호출을 하지 않고 객체를 생성하는 또다른 방법을 소개하겠다.
+바로 블로그 처음에 언급한 Object.create() 함수이다.
+
+#### Object.create()
+Object.create()함수는 ES5에 도입된 구문이다.
+사용법은 아래와 같다.
+```javascript
+Object.create(proto[, propertiesObject])
+```
+자세한 API는 https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/create 에서 참고
+
+```javascript
+function Person(name) {
+    this.name = name;
+}
+Person.prototype.greeting = function() {
+    console.log("Hi! I'm " + this.name + ".");
+}
+var ckboy = Object.create(Person.prototype, {
+    name: {value: 'ckboyjiy'}
+});
+ckboy.greeting();
+var ckgirl = new Person('ckgirl');
+ckgirl.greeting();
+console.log(ckboy); // Person {}
+console.log(ckgirl); // Person { name: 'ckgirl' }
+console.log(ckboy.__proto__ === ckgirl.__proto__); // true
+```
+ckboy변수는 Object.create()를 사용하여 객체를 생성하였다.
+특이한 점은 greeting()함수 호출에서 "Hi! I'm ckboyjiy." 문구가 정상적으로 나오는 걸 봐서는 name값이 있다는 것인데..
+console.log(ckboy)로 찍어보면 Person {} 값이 비어 있다.
+이것은 enumerable 의 기본값이 false인데 이것은 프로퍼티를 가본적으로 숨긴다는 속성이다. ckgirl 처럼 값이 표시되길 원하면 아래와 같이 true로 지정해주면 된다.
+
+```javascript
+function Person(name) {
+    this.name = name;
+}
+Person.prototype.greeting = function() {
+    console.log("Hi! I'm " + this.name + ".");
+}
+var ckboy = Object.create(Person.prototype, {
+    name: {value: 'ckboyjiy', enumerable: true}
+});
+ckboy.greeting();
+var ckgirl = new Person('ckgirl');
+ckgirl.greeting();
+console.log(ckboy); // Person { name: 'ckboyjiy' }
+console.log(ckgirl); // Person { name: 'ckgirl' }
+console.log(ckboy.__proto__ === ckgirl.__proto__); // true
+```
