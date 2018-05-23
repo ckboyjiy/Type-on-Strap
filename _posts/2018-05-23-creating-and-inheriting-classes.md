@@ -51,7 +51,7 @@ greeting 함수에서 사용되는 this는 C나 Java를 알고 있는 분들이 
 
 ## 객체지향 프로그래밍 - 기초
 우리는 위에서 person이라는 객체를 만들어 보았다. 학교를 예로 들자면, 학교 안에서 사람을 세분화 해본다면 학생과 선생님으로 나눌 수 있다.
-객체지향 프로그래밍에서는 특정 클래스를 기반으로 새로운 클래스를 만들 수 있다. --Child 클래스는 Parent 클래스를 상속받아서 만들어진다 --
+객체지향 프로그래밍에서는 특정 클래스를 기반으로 새로운 클래스를 만들 수 있다. --- Child 클래스는 Parent 클래스를 상속받아서 만들어진다 --- 
 우리는 Person이라는 사람 클래스를 만들고 Person 클래스를 상속받아 Student와 Teacher를 만들어보자.
 
 ### 객체와 클래스
@@ -97,17 +97,53 @@ ckboy.greeting();
 var ckgirl = new Person('ckgirl');
 ckgirl.greeting();
 ```
-**생성자 함수**는 반환값이 없으며 단순히 멤버변수와 멤버함수를 정의한다.
-그리고 this를 사용하여 생성된 인스턴스마다 자신의 멤버변수(멤버함수)를 바라보도록 한다.
+**생성자 함수**는 반환값이 없으며 단순히 멤버변수(속성)와 멤버함수(함수)를 정의한다.
+그리고 this를 사용하여 생성된 인스턴스마다 자신의 멤버변수(또는 멤버함수)를 바라보도록 한다.
 마지막으로 가독성을 위해 생성자 함수 이름의 첫글자는 대문자를 사용하도록 하자.
 
 #### 완벽한 생성자 함수 만들기
 위에서 만든 객체를 한번 콘솔로 찍어보자.
 ```javascript
-console.log(ckboy);
-> Person { name: 'ckboyjiy', greeting: [Function] }
-console.log(ckgirl);
-> Person { name: 'ckgirl', greeting: [Function] }
+console.log(ckboy); // Person { name: 'ckboyjiy', greeting: [Function] }
+console.log(ckgirl); // Person { name: 'ckgirl', greeting: [Function] }
 ```
 새로운 인스턴스가 만들어 질 때마다 name 및 greeting을 매번 정의하게 된다.
 불필요한 greeting 함수가 매번 정의되고 있는 것이다. 
+
+그렇다 우리는 형편없는 인스턴스를 만들었던 것이다.
+
+> #### **프로토타입 기반 언어**
+> 자바스크립트의 객체들은 각각 프로토타입 객체가 존재한다. 이 객체는 메서드 및 속성을 상속하는 템플릿 객체 역할을 한다.
+> #### **프로토타입 체인**
+> 객체는 자신의 프로토타입이 없을 때까지 반복적으로 참조한다. (예 : Student() <- Person() <- {} <- undefined)
+>
+> 자세한 내용은 추후 별도로 포스팅하겠음.
+
+위에 잠시 언급한 프로토타입 체인을 이용하여 프로토타입 상속을 구현하려고 한다.
+
+먼저 기존에 만든 Person 함수를 멤버변수와 멤버함수를 분리시켜야 한다.
+아래와 같이 멤버변수는 생성자 함수에 놔두고, 멤버함수는 프로토타입에 정의한다.
+
+```javascript
+function Person(name) {
+    this.name = name;
+}
+Person.prototype.greeting = function() {
+    console.log("Hi! I'm " + this.name + ".");
+}
+var ckboy = new Person('ckboyjiy');
+ckboy.greeting();
+var ckgirl = new Person('ckgirl');
+ckgirl.greeting();
+console.log(ckboy); // Person { name: 'ckboyjiy' }
+console.log(ckgirl); // Person { name: 'ckgirl' }
+console.log(ckboy.__proto__); // Person { greeting: [Function] }
+console.log(ckgirl.__proto__); // Person { greeting: [Function] }
+console.log(ckboy.__proto__ === ckgirl.__proto__); // true
+```
+
+* 콘솔로그에 표시되는 것처럼 ckboy와 ckgirl은 name이라는 멤버변수(속성)만 가지고 있다.
+* 하지만 greeting()함수도 정상적으로 호출되는 것을 확인할 수 있다.
+* 각 인스턴스의 __proto__에 greeting 함수가 존재하며 두 인스턴스는 동일한 __proto__객체를 참조하는 것을 확인할 수 있다.
+
+위처럼 생성자 함수와 프로토타입을 이용하면 클래스와 유사하게 자바스크립트 객체를 생성할 수 있다.
