@@ -157,7 +157,7 @@ Object.create()함수는 ES5에 도입된 구문이다.
 ```javascript
 Object.create(proto[, propertiesObject])
 ```
-자세한 API는 https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/create 에서 참고
+자세한 API는 [MDN API](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/create) 에서 참고
 
 ```javascript
 function Person(name) {
