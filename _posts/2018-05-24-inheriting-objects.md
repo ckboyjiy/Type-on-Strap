@@ -1,7 +1,7 @@
 ---
 layout: post
 title: 자바스크립트의 프로토타입 체인과 객체 상속
-tags: [javascript, class, inherit]
+tags: [javascript, object, prototype, inherit]
 excerpt_separator: <!--more-->
 ---
 

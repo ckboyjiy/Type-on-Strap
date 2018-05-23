@@ -1,7 +1,7 @@
 ---
 layout: post
 title: 자바스크립트의 객체 생성
-tags: [javascript, class, inherit]
+tags: [javascript, object, create]
 excerpt_separator: <!--more-->
 ---
 
