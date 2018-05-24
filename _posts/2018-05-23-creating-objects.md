@@ -133,14 +133,14 @@ var ckgirl = new Person('ckgirl');
 ckgirl.greeting();
 console.log(ckboy); // Person { name: 'ckboyjiy' }
 console.log(ckgirl); // Person { name: 'ckgirl' }
-console.log(ckboy.__proto__); // Person { greeting: [Function] }
-console.log(ckgirl.__proto__); // Person { greeting: [Function] }
-console.log(ckboy.__proto__ === ckgirl.__proto__); // true
+console.log(Object.getPrototypeOf(ckboy)); // Person { greeting: [Function] }
+console.log(Object.getPrototypeOf(ckgirl)); // Person { greeting: [Function] }
+console.log(Object.getPrototypeOf(ckboy) === Object.getPrototypeOf(ckgirl)); // true
 ```
 
 * 콘솔로그에 표시되는 것처럼 ckboy와 ckgirl은 name이라는 멤버변수(속성)만 가지고 있다.
 * 하지만 greeting()함수도 정상적으로 호출되는 것을 확인할 수 있다.
-* 각 인스턴스의 __proto__에 greeting 함수가 존재하며 두 인스턴스는 동일한 __proto__객체를 참조하는 것을 확인할 수 있다.
+* 각 인스턴스의 prototype에 greeting 함수가 존재하며 두 인스턴스는 동일한 prototype객체를 참조하는 것을 확인할 수 있다.
 
 위처럼 생성자 함수와 프로토타입을 이용하면 클래스와 유사하게 자바스크립트 객체를 생성할 수 있다.
 
@@ -170,7 +170,7 @@ var ckgirl = new Person('ckgirl');
 ckgirl.greeting();
 console.log(ckboy); // Person {}
 console.log(ckgirl); // Person { name: 'ckgirl' }
-console.log(ckboy.__proto__ === ckgirl.__proto__); // true
+console.log(Object.getPrototypeOf(ckboy) === Object.getPrototypeOf(ckgirl)); // true
 ```
 ckboy변수는 Object.create()를 사용하여 객체를 생성하였다.
 이는 이전 **생성자 함수를 사용하지 않고** 객체를 사용하기 때문에 명시적으로 <code>name: {value: 'ckboyjiy'}</code>와 같이 name 필드를 정의했다.
@@ -194,5 +194,5 @@ var ckgirl = new Person('ckgirl');
 ckgirl.greeting();
 console.log(ckboy); // Person { name: 'ckboyjiy' }
 console.log(ckgirl); // Person { name: 'ckgirl' }
-console.log(ckboy.__proto__ === ckgirl.__proto__); // true
+console.log(Object.getPrototypeOf(ckboy) === Object.getPrototypeOf(ckgirl)); // true
 ```
