@@ -93,7 +93,7 @@ var teacher = new Teacher('ckboyjiy', 33, 'male', ['javascript', 'typescript'], 
 ```
 
 1. Teacher.prototype(Person.prototype을 프로토타입으로 가지고 있는 객체)을 상속하는 새로운 객체(A라고 하자)를 하나 생성한다.
-2. A의 this를 가지고 생성자 함수 Teacher()가 호출된다.
+2. A의 컨텍스트 즉 this를 가지고 생성자 함수 Teacher()가 호출된다.
 3. 생성자 함수에서 리턴된 객체는 new 연산자의 결과가 된다.
 4. 생성자 함수에 리턴되는 값이 없다면? A 객체가 리턴된다. (일반적으로 리턴값이 없다!)
 
@@ -155,3 +155,45 @@ teacher.changeSubject('history');
 teacher.greeting(); // Hello. My name is Mr. ckboyjiy, and I teach history.
 ```
 
+### 프로토타입 체인은 어떻게 사용되는가?
+지난번에 잠시 언급한 것처럼 자바스크립트는 프로토타입 기반의 언어이다.
+위에 구현한 메서드 오바라이딩도 결국 프로토타입 체인을 통해서 구현된 것이다.
+
+먼저 teacher라는 객체 인스턴스는 어떤 값으로 구성되어 있을까?
+```javascript
+teacher = {
+    age: 33,
+    gender: "male",
+    interests: Array(2),
+    name: "ckboyjiy",
+    subject: "mathematics",
+    __proto__: A <-- Object.create(Person.prototype)
+}
+```
+실제 teacher 객체에는 greeting 및 changeSubject함수가 없다.
+단지 teacher 인스턴스를 만들 때 사용했던 프로토타입에 대한 주소정보를 가지고 있다.
+<code>teacher.greeting();</code>를 실행한다면 어떻게 함수를 찾아갈까?
+* teacher 객체에 greeting 함수가 있는지 확인한다.
+* 없으므로 teacher의 프로토타입을 바라본다.
+* teacher의 프로토타입은 다음과 같이 구성되어 있다.
+```javascript
+A = {
+    constructor: Teacher,
+    greeting: Function,
+    changeSubject: Function,
+    __proto__: B <-- Person.prototype
+}
+```
+* greeting 함수가 있으므로 해당 함수를 실행한다.
+* 만약 Teacher.prototype에 greeting이 없으면 어떻게 되는가?
+* Teacher.prototype의 prototype으로 넘어간다.
+```javascript
+B = {
+    constructor: Person,
+    greeting: Function,
+    __proto__: C <-- Object.prototype
+}
+```
+* 여기 프로토타입에 greeting이 있으므로 함수를 실행한다.
+* 함수 호출은 끝났지만 더 내려가보자.
+* C는 자바스크립트 기본 Object의 프로토타입으로 hasOwnProperty, toString 등의 함수를 가지고 있다.
