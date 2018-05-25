@@ -102,9 +102,10 @@ ckgirl.greeting();
 ```javascript
 console.log(ckboy); // Person { name: 'ckboyjiy', greeting: [Function] }
 console.log(ckgirl); // Person { name: 'ckgirl', greeting: [Function] }
+console.log(ckboy.greeting === ckgirl.greeting); // false
 ```
 새로운 인스턴스가 만들어 질 때마다 name 및 greeting을 매번 정의하게 된다.
-불필요한 greeting 함수가 매번 정의되고 있는 것이다. 
+불필요한 greeting 함수가 매번 정의되고 있는 것이다. 이는 결국 메모리의 효율성이 좋지 않다는 것이다.
 
 그렇다 우리는 형편없는 인스턴스를 만들었던 것이다.
 
@@ -117,7 +118,7 @@ console.log(ckgirl); // Person { name: 'ckgirl', greeting: [Function] }
 
 위에 잠시 언급한 프로토타입 체인을 이용하여 프로토타입 상속을 구현하려고 한다.
 
-먼저 기존에 만든 Person 함수를 멤버변수와 멤버함수를 분리시켜야 한다.
+먼저 기존에 만든 Person 함수의 멤버변수와 멤버함수를 분리시켜야 한다.
 아래와 같이 멤버변수는 생성자 함수에 놔두고, 멤버함수는 프로토타입에 정의한다.
 
 ```javascript
@@ -128,19 +129,21 @@ Person.prototype.greeting = function() {
     console.log("Hi! I'm " + this.name + ".");
 }
 var ckboy = new Person('ckboyjiy');
-ckboy.greeting();
 var ckgirl = new Person('ckgirl');
-ckgirl.greeting();
 console.log(ckboy); // Person { name: 'ckboyjiy' }
 console.log(ckgirl); // Person { name: 'ckgirl' }
+ckboy.greeting(); // Hi! I'm ckboyjiy.
+ckgirl.greeting(); // Hi! I'm ckgirl.
 console.log(Object.getPrototypeOf(ckboy)); // Person { greeting: [Function] }
 console.log(Object.getPrototypeOf(ckgirl)); // Person { greeting: [Function] }
 console.log(Object.getPrototypeOf(ckboy) === Object.getPrototypeOf(ckgirl)); // true
+console.log(ckboy.greeting === ckgirl.greeting); // true
 ```
 
 * 콘솔로그에 표시되는 것처럼 ckboy와 ckgirl은 name이라는 멤버변수(속성)만 가지고 있다.
 * 하지만 greeting()함수도 정상적으로 호출되는 것을 확인할 수 있다.
 * 각 인스턴스의 prototype에 greeting 함수가 존재하며 두 인스턴스는 동일한 prototype객체를 참조하는 것을 확인할 수 있다.
+* 그리고 각 인스턴스에서 사용한 greeting 함수가 동일한 것도 확인할 수 있다.
 
 위처럼 생성자 함수와 프로토타입을 이용하면 클래스와 유사하게 자바스크립트 객체를 생성할 수 있다.
 
