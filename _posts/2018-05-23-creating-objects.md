@@ -176,11 +176,11 @@ console.log(ckgirl); // Person { name: 'ckgirl' }
 console.log(Object.getPrototypeOf(ckboy) === Object.getPrototypeOf(ckgirl)); // true
 ```
 ckboy변수는 Object.create()를 사용하여 객체를 생성하였다.
-이는 이전 **생성자 함수를 사용하지 않고** 객체를 사용하기 때문에 명시적으로 <code>name: {value: 'ckboyjiy'}</code>와 같이 name 필드를 정의했다.
+이 방식은 **생성자 함수를 사용하지 않고** 객체를 사용하기 때문에 두번째 파라미터에 명시적으로 <code>name: {value: 'ckboyjiy'}</code>와 같이 name 필드를 정의했다.
 
-특이한 점은 greeting()함수 호출에서 "Hi! I'm ckboyjiy." 문구가 정상적으로 나오는 걸 봐서는 name값이 있다는 것인데..
+여기서 특이한 점은 greeting()함수 호출에서 "Hi! I'm ckboyjiy." 문구가 정상적으로 나오는 걸 봐서는 name값이 있다는 것인데..
 console.log(ckboy)로 찍어보면 Person {} 값이 비어 있다.
-이것은 enumerable 의 기본값이 false인데 이것은 프로퍼티를 가본적으로 숨긴다는 속성이다. ckgirl 처럼 값이 표시되길 원하면 아래와 같이 true로 지정해주면 된다.
+이것은 enumerable 의 기본값이 false인데 이것은 프로퍼티를 기본적으로 숨긴다는 속성이다. ckgirl 처럼 값이 표시되길 원하면 아래와 같이 true로 지정해주면 된다.
 
 ```javascript
 function Person(name) {
@@ -199,3 +199,5 @@ console.log(ckboy); // Person { name: 'ckboyjiy' }
 console.log(ckgirl); // Person { name: 'ckgirl' }
 console.log(Object.getPrototypeOf(ckboy) === Object.getPrototypeOf(ckgirl)); // true
 ```
+
+이정도면 객체지향지향 언어의 클래스로 사용할 수 있는 자바스크립트 객체를 만들어본 것 같다.
