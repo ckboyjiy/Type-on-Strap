@@ -112,7 +112,7 @@ console.log(ckboy.greeting === ckgirl.greeting); // false
 > #### **프로토타입 기반 언어**
 > 자바스크립트의 객체들은 각각 프로토타입 객체가 존재한다. 이 객체는 메서드 및 속성을 상속하는 템플릿 객체 역할을 한다.
 > #### **프로토타입 체인**
-> 객체는 자신의 프로토타입이 없을 때까지 반복적으로 참조한다. (예 : Student() <- Person() <- {} <- undefined)
+> 객체는 자신의 프로토타입이 없을 때까지 반복적으로 참조한다. (예 : Student <- Student.prototype <- Person.prototype <- Object.prototype <- null)
 >
 > 자세한 내용은 추후 별도로 포스팅하겠음.
 
