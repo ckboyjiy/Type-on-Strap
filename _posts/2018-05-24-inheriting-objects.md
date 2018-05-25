@@ -66,7 +66,6 @@ console.log로 출력된 것과 같이 teacher의 prototype에 greeting 함수�
 #### 프로토타입 상속하기(연결하기)
 greeting메서드도 사용하기 위해서는 별도로 Person 클래스의 프로토타입에 정의한 함수도 상속시켜줘야 한다.
 
-##### 프로토타입 복사
 우리는 이미 원하는 프로토타입을 가진 객체를 만드는 법을 알고 있다. 바로 Object.create() 함수이다.
 
 ```javascript
