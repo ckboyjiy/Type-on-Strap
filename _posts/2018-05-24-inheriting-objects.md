@@ -185,6 +185,7 @@ A = {
 }
 ```
 * greeting 함수가 있으므로 해당 함수를 실행한다.
+* B에도 greeting 함수는 존재하지만 A에 이미 greeting 함수가 있으므로 B가 호출될 일은 없다. 이것이 바로 prototype shadowing이다.
 * 만약 Teacher.prototype에 greeting이 없으면 어떻게 되는가?
 * Teacher.prototype의 prototype으로 넘어간다.
 ```javascript
@@ -197,3 +198,4 @@ B = {
 * 여기 프로토타입에 greeting이 있으므로 함수를 실행한다.
 * 함수 호출은 끝났지만 더 내려가보자.
 * C는 자바스크립트 기본 Object의 프로토타입으로 hasOwnProperty, toString 등의 함수를 가지고 있다.
+* C의 프로토타입은 null이다.
