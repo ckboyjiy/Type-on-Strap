@@ -11,7 +11,7 @@ excerpt_separator: <!--more-->
 ## 객체지향 프로그래밍 - 기초
 우리는 지난번에 Person이라는 객체를 만들어 보았다. 이것은 사실상 객체지향언어의 클래스와 유사하다.
 
-우리는 이제 Person 클래스를 상속받아 Student와 Teacher를 만들어보자.
+우리는 이제 Person 클래스를 상속받아 Teacher와 Student를 만들어보자.
 
 ### 그럴듯한 Peron 클래스
 지난번에 만든 Person 객체(이제부터 클래스라고 하자)는 구조적으로는 많이 좋아졌지만 세부 구성은 형편이 없었다.
@@ -199,3 +199,85 @@ B = {
 * 함수 호출은 끝났지만 더 내려가보자.
 * C는 자바스크립트 기본 Object의 프로토타입으로 hasOwnProperty, toString 등의 함수를 가지고 있다.
 * C의 프로토타입은 null이다.
+
+### Student 클래스 만들기
+우리는 이미 Person 클래스를 상속받는 Teacher 클래스를 만들어 보았다.
+Student 클래스는 복기하는 차원에서 추가되는 메서드 없이 greeting 메서드만 재정의해보자.
+```javascript
+function Student(name, age, gender, interests) {
+    Person.call(this, name, age, gender, interests); // Person 클래스의 생성자 함수를 이용해서 this를 초기화한다.
+}
+Student.prototype = Object.create(Person.prototype); // Person 클래스의 프로토타입을 상속받은 새로운 객체를 Student의 프로토타입으로 지정한다.
+Student.prototype.constructor = Student; // Studeont의 프로토타입의 생성자 함수를 Student 함수로 지정한다.
+Student.prototype.greeting = function() { // greeting 메서드를 재정의한다.
+    console.log("Yo!!, I'm " + this.name + ".");
+}
+```
+이렇게 우리는 Teacher 클래스와 Student 클래스를 만들어 보았다.
+추가적으로 2015년도에 ECMAScript6가 발표되었다. 여기에서 한가지 흥미로운 것이 추가되었는데, 바로 Class이다!
+Class에 대해서 간단히 알고 이번 블로그를 마무리 하도록 하자.
+
+### ES6의 클래스(Class)
+와우! 클래스라니!! 하지만 좋아하긴 이르다. 이것은 실제로는 기능이 추가된 것이 아닌 신택틱 슈가(syntactic sugar)일 뿐이다.
+
+우리가 위에서 작업한 클래스를 만들기 쉽도록 또는 가독성이 좋도록 프로그래밍 언어를 재구성해 놓은 것 뿐이다.
+Person, Teacher, Student 클래스를 하나하나씩 변경해보자.
+
+#### Person 클래스
+```javascript
+class Person {
+    constructor(name, age, gender, interests) { // 1. 생성자 함수
+        this.name = name;
+        this.age = age;
+        this.gender = gender;
+        this.interests = interests;
+    }
+    greeting() { // 2. 메서드 정의
+        console.log("Hi! I'm " + this.name + ".");
+    }
+}
+var person = new Person('ckboyjiy', 33, 'male', ['javascript', 'typescript']);
+```
+C나 Java의 클래스 문법과 유사하다. 위에서 만들어본 Person 함수와 비교를 하면 아래와 같다.
+1. 기존의 function Person(...) 함수와 동일하다.
+2. Person.prototype.greeting 함수와 동일하다.
+
+#### Teacher 클래스
+```javascript
+class Teacher extends Person { // 1. 상속할 클래스 지정
+    constructor(name, age, gender, interests, subject) {
+        super(name, age, gender, interests); // 2. 부모의 생성자 호출
+        this.subject = subject;
+    }
+    greeting() { // 3. 메서드 변경
+        var prefix = this.gender === 'male' ? 'Mr. ' : 'Mrs. ';
+        console.log("Hello. My name is " + prefix + this.name + ", and I teach " + this.subject + ".");
+    }
+    changeSubject(subject) { // 4. 메서드 추가
+        this.subject = subject;
+    }
+}
+var teacher = new Teacher('ckboyjiy', 33, 'male', ['javascript', 'typescript'], 'mathematics');
+```
+1. 상속할 클래스를 지정한다.
+2. 부모의 생성자를 호출한다.
+3. 메서드를 오바라이드한다.
+4. 메서드를 추가한다.
+
+#### Student 클래스
+```javascript
+class Student extends Person { // 1. 상속할 클래스 지정
+    constructor(name, age, gender, interests) {
+        super(name, age, gender, interests); // 2. 부모의 생성자 호출
+    }
+    greeting() { // 3. 메서드 변경
+        console.log("Yo!!, I'm " + this.name + ".");
+    }
+}
+var student = new Student('ckboyjiy', 18, 'male', ['javascript', 'typescript']);
+```
+1. 상속할 클래스를 지정한다.
+2. 부모의 생성자를 호출한다.
+3. 메서드를 오버라이드한다.
+
+와우! 이번 포스팅은 여기서 마무리하겠다.
