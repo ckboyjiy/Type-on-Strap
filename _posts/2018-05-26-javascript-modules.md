@@ -51,13 +51,13 @@ console.log(`That student's grades is ${student.grades}.`); // 헉 누군가 나
 클래스에 private 변수를 만들려면 어떻게 해야할까?
 우리는 클로저와 즉시 실행 함수 표현(IIFE - Immediately-Invoked Function expression)을 이용하여 private 변수를 흉내낼 수 있다.
 
-#### 어휘적 유효 범위(Lexical Scoping)와 클로저(Closure)
+### 어휘적 유효 범위(Lexical Scoping)와 클로저(Closure)
 클로저는 함수와 함수가 선언된 어휘적 환경의 조합이라고 한다.
 도통 무슨말인지 모르겠다.
 함수가 접근할 수 있는 범위(Scope)가 있다.
 이 범위는 함수가 실행될 때가 아니라 함수가 정의될 때 결정된다. 이것을 어휘적 유효 범위(Lexical Scoping)이라고 한다.
 
-##### 어휘적 유효 범위(Lexical Scoping)
+#### 어휘적 유효 범위(Lexical Scoping)
 아래의 코드를 보자.
 ```javascript
 var global = 'Global';
@@ -84,7 +84,7 @@ Inner 함수는 Outer 함수에서 정의되었으므로 Outer 함수의 범위�
 위 예제는 어휘적 유효 범위 지정이 소스 코드 내에서 변수가 선언된 위치를 사용하여 변수의 사용 가능한 위치를 결정한다는 예를 보여준다.
 중첩된 함수들은 그들의 외부 유효 범위에서 선언된 변수들을 접근할 권한을 가진다.
 
-##### 클로저(Closure)
+#### 클로저(Closure)
 어휘적 유효 범위를 바탕으로 우리는 클로저를 구성할 수 있다.
 클로저는 위에서 언급한 것처럼 함수와 함수가 선언된 어휘적 유효 범위의 조합이라고 한다.
 역시 무슨 말인지 모르겠다.
@@ -144,7 +144,7 @@ console.log(a.grades); // 5.
 하지만 코드가 아름답지는 않다. 전역변수에는 StudentClass함수도 선언되어 있고, 이 함수의 리턴값인 _Student도 A변수에 의해 참조되고 있다.
 우리는 이것을 즉시 실행 함수 표현을 이용해서 조금 깔끔하게 변경할 수 있다.
 
-##### 즉시 실행 함수 표현(IIFE - Immediately-Invoked Function expression)
+### 즉시 실행 함수 표현(IIFE - Immediately-Invoked Function expression)
 함수 표현식을 괄호()로 감싸고 그 괄호 뒤에 매개변수를 넘기는 괄호를 붙이면 함수를 정의 즉시 실행되게 할 수 있다.
 위에 StudentClass를 즉시 실행 함수 표현으로 바꾸면 아래와 같다.
 ```javascript
@@ -173,3 +173,71 @@ console.log(student.grades); // undefined
 또한 이를 통해 코드를 분리하여 조직화할 수 있었다.
 
 이것 외에 다양한 디자인 패턴들과 결합하여 모듈을 설계해 나갈 수 있을 것이다.
+
+마지막으로 우리가 이전에 만들었던 Person, Teacher, Student 클래스를 위에서 배운 형태로 바꾸고 마무리 하도록 하겠다.
+
+### Person 모듈
+```javascript
+var Person = (function() {
+    function Person(name, age, gender, interests) {
+        this.name = name;
+        this.age = age;
+        this.gender = gender;
+        this.interests = interests;
+    }
+    Person.prototype.greeting = function() {
+        console.log("Hi! I'm " + this.name + ".");
+    }
+    return Person;
+})();
+var person = new Person('ckboyjiy', 33, 'male', []);
+person.greeting();
+```
+
+### Teacher 모듈
+```javascript
+var Teacher = (function() {
+    function Teacher(name, age, gender, interests, subject) {
+        Person.call(this, name, age, gender, interests);
+        this.subject = subject;
+    }
+
+    Teacher.prototype = Object.create(Person.prototype);
+    Teacher.prototype.constructor = Teacher;
+    Teacher.prototype.greeting = function() { // 메서드 변경
+        var prefix = this.gender === 'male' ? 'Mr. ' : 'Mrs. ';
+        console.log("Hello. My name is " + prefix + this.name + ", and I teach " + this.subject + ".");
+    }
+    Teacher.prototype.changeSubject = function(subject) { // 메서드 추가
+        this.subject = subject;
+    }
+    return Teacher;
+})();
+var teacher = new Teacher('ckTeacher', 33, 'male', ['javascript', 'typescript'], 'mathematics');
+teacher.changeSubject('history');
+teacher.greeting();
+```
+
+### Student 모듈
+```javascript
+var Student = (function () {
+    var _grades;
+    function Student(name, age, gender, interests) {
+        Person.call(this, name, age, gender, interests);
+        _grades = 0;
+    }
+    Student.prototype = Object.create(Person.prototype);
+    Student.prototype.constructor = Student;
+    Student.prototype.setGrades = function(score) {
+        _grades = score;
+    }
+    Student.prototype.getGrades = function() {
+        return `My grades is ${_grades} points.`;
+    }
+    return Student;
+})();
+
+var student = new Student('ckStudent', 18, 'male', ['javascript', 'typescript']);
+student.setGrades(44);
+student.greeting();
+```
